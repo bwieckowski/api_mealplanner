@@ -8,6 +8,9 @@ parameters:
 
 services:
     JMS\Serializer\SerializerInterface: '@jms_serializer'
+    FOS\UserBundle\Form\Factory\FactoryInterface: '@fos_user.registration.form.factory'
+    FOS\UserBundle\Model\UserManagerInterface: '@fos_user.user_manager'
+
 
     App\Event\ExceptionSubscriber:
             tags:
