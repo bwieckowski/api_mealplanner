@@ -2,7 +2,7 @@
 
 namespace App\Service;
 
-use App\Exception\InvalidFormValidation;
+use App\Exception\ValidationException;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Form\Factory\FactoryInterface;
 use Symfony\Component\Form\FormInterface;
@@ -26,8 +26,8 @@ class RegistrationService
         $form->setData($user);
         $form->submit($data);
         if (!$form->isValid()) {
-            $errors = $this->getErrorsFromForm($form);
-            throw new InvalidFormValidation($errors, 400);
+            $errors = json_encode($this->getErrorsFromForm($form));
+            throw new ValidationException($errors);
         }
         $this->userManager->updateUser($user);
     }

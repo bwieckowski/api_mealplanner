@@ -16,18 +16,18 @@ abstract class BaseController extends AbstractController
         $this->serializer = $serializer;
     }
 
-    protected  function createApiResponse($data, $statusCode = 200)
+    protected function createApiResponse($data, $statusCode = 200)
     {
         $json = $this->serialize($data);
-        return new Response($json, $statusCode, array(
+        return new Response($json, $statusCode, [
             'Content-Type' => 'application/json'
-        ));
+        ]);
     }
 
     protected function serialize($data, $format = 'json')
     {
         $context = new SerializationContext();
         $context->setSerializeNull(true);
-        return $this->serializer->serialize($data, $format);
+        return $this->serializer->serialize($data, $format, $context);
     }
 }
