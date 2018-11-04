@@ -26,10 +26,17 @@ class User extends BaseUser
      */
     protected $products;
 
+    /**
+     * @var type
+     * @ORM\OneToMany(targetEntity="Meal", mappedBy="user")
+     */
+    protected $meals;
+
     public function __construct()
     {
         parent::__construct();
         $this->products = new ArrayCollection();
+        $this->meals = new ArrayCollection();
     }
 
     public function setId($id): void
@@ -43,8 +50,8 @@ class User extends BaseUser
     }
 
     /**
-     * @return Collection | Product[]
-     */
+ * @return Collection | Product[]
+ */
     public function getProducts() : Collection
     {
         return $this->products;
@@ -61,9 +68,33 @@ class User extends BaseUser
     {
         if ($this->products->contains($product)) {
             $this->products->removeElement($product);
-            // set the owning side to null (unless already changed)
             if ($product->getUser() === $this) {
                 $product->setUser(null);
+            }
+        }
+    }
+
+    /**
+     * @return Collection | Meal[]
+     */
+    public function getMeals() : Collection
+    {
+        return $this->meals;
+    }
+
+    public function addMeal(Meal $meals) :void
+    {
+        if (!$this->meals->contains($meals)) {
+            $this->meals[] = $meals;
+            $meals->setUser($this);
+        }
+    }
+    public function removeMeal(Meal $meals) :void
+    {
+        if ($this->meals->contains($meals)) {
+            $this->meals->removeElement($meals);
+            if ($meals->getUser() === $this) {
+                $meals->setUser(null);
             }
         }
     }

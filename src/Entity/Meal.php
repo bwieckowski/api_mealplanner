@@ -7,10 +7,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
 /**
- * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
- * @ORM\Table(name="product")
+ * @ORM\Entity
+ * @ORM\Table(name="meal")
  */
-class Product
+class Meal
 {
     /**
      * @ORM\Id
@@ -24,6 +24,23 @@ class Product
      * @var string
      */
     private $name;
+
+    /**
+     * @ORM\Column(type="string")
+     * @var string
+     */
+    private $description;
+
+    /**
+     * @ORM\Column(type="integer")
+     * @var int
+     */
+    private $portions;
+
+    /**
+     * @ORM\ManyToMany(targetEntity="Product", inversedBy="meals")
+     */
+    private $products;
 
     /**
      * @ORM\Column(type="integer")
@@ -56,20 +73,16 @@ class Product
     private $weight;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="products")
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="meals")
      * @ORM\JoinColumn(nullable=false)
      */
     private $user;
 
-    /**
-     * @ORM\ManyToMany(targetEntity="Meal", mappedBy="products")
-     */
-    private $meals;
-
     public function __construct()
     {
-        $this->meals = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
+
 
     public function getId()
     {
@@ -89,6 +102,48 @@ class Product
     public function setName(string $name): void
     {
         $this->name = $name;
+    }
+
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(string $description): void
+    {
+        $this->description = $description;
+    }
+
+    public function getPortions(): int
+    {
+        return $this->portions;
+    }
+
+    public function setPortions(int $portions): void
+    {
+        $this->portions = $portions;
+    }
+
+    /**
+     * @return Collection|Product[]
+     */
+    public function getProducts(): Collection
+    {
+        return $this->products;
+    }
+
+    public function addProduct(Product $products)
+    {
+        if (!$this->products->contains($products)) {
+            $this->products[] = $products;
+        }
+    }
+
+    public function removeProduct(Product $products)
+    {
+        if ($this->products->contains($products)) {
+            $this->products->removeElement($products);
+        }
     }
 
     public function getCalory(): int
@@ -149,30 +204,6 @@ class Product
     public function setUser(User $user): void
     {
         $this->user = $user;
-    }
-
-    /**
-     * @return Collection|Meal[]
-     */
-    public function getMeals(): Collection
-    {
-        return $this->meals;
-    }
-
-    public function addMeal(Meal $meals)
-    {
-        if (!$this->meals->contains($meals)) {
-            $this->meals[] = $meals;
-            $meals->addProduct($this);
-        }
-    }
-
-    public function removeMeal(Meal $meals)
-    {
-        if ($this->meals->contains($meals)) {
-            $this->meals->removeElement($meals);
-            $meals->removeProduct($this);
-        }
     }
 
 
