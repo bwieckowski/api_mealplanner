@@ -11,6 +11,7 @@ namespace App\Tests\Service;
 use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
+use Knp\Component\Pager\PaginatorInterface;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Service\ProductService;
@@ -21,6 +22,7 @@ class ProductServiceTest extends TestCase
 {
     private $emMock;
     private $productRepositoryMock;
+    private $paginatorMock;
     private $productService;
 
     protected function setUp()
@@ -33,16 +35,23 @@ class ProductServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->paginatorMock = $this->getMockBuilder(PaginatorInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->productService = new ProductService(
             $this->productRepositoryMock,
-            $this->emMock
+            $this->emMock,
+            $this->paginatorMock
         );
+
     }
 
     protected function tearDown()
     {
         $this->productRepositoryMock = null;
         $this->emMock = null;
+        $this->paginatorMock = null;
         $this->productService = null;
     }
 

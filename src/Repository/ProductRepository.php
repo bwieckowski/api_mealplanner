@@ -37,7 +37,7 @@ class ProductRepository extends ServiceEntityRepository
             ->where('p.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
-            ->getResult();
+            ->getOneOrNullResult();
     }
 
 }

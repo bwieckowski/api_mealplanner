@@ -14,3 +14,20 @@ user_login:
 
 api_login_check:
     path: /login_check
+
+all_products:
+    path: /api/products
+    controller: App\Controller\ProductController::getAllPagination
+    methods: [GET]
+add_product:
+    path: /api/products
+    controller: App\Controller\ProductController::add
+    methods: [POST]
+update_product:
+    path: /api/products/{id}
+    controller: App\Controller\ProductController::update
+    methods: [PUT]
+delete_product:
+    path: /api/products/{id}
+    controller: App\Controller\ProductController::delete
+    methods: [DELETE]
