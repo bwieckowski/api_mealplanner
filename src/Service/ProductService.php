@@ -2,9 +2,11 @@
 
 namespace App\Service;
 
+use App\Exception\ValidationException;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Exception\BadRequestException;
@@ -15,14 +17,17 @@ class ProductService
     private $productRepository;
     private $em;
     private $paginator;
+    private $validator;
 
     public function __construct(ProductRepository $productRepository,
                                 EntityManagerInterface $em,
-                                PaginatorInterface $paginator)
+                                PaginatorInterface $paginator,
+                                ValidatorInterface $validator)
     {
         $this->productRepository = $productRepository;
         $this->em = $em;
         $this->paginator = $paginator;
+        $this->validator = $validator;
     }
 
     public function getAllByUserId($userId)
@@ -46,6 +51,11 @@ class ProductService
         $product->setFat($data['fat']);
         $product->setWeight($data['weight']);
         $product->setUser($user);
+        $errors = $this->validator->validate($product);
+        if (!empty($errors)) {
+            $errorsString = (string) $errors;
+            throw new ValidationException($errorsString);
+        }
 
         $this->em->persist($product);
         $this->em->flush();

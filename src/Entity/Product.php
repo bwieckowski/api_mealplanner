@@ -5,6 +5,7 @@ namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass="App\Repository\ProductRepository")
@@ -21,36 +22,48 @@ class Product
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="Not be blank")
+     * @Assert\Type("string",message="Field must be string")
      * @var string
      */
     private $name;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Type("int",message="Field must be int")
      * @var int
      */
     private $calory;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Type("int",message="Field must be int")
      * @var int
      */
     private $protein;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Type("int",message="Field must be int")
      * @var int
      */
     private $carbon;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank()
+     * @Assert\Type("int",message="Field must be int")
      * @var int
      */
     private $fat;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank()
+     * @Assert\Type("float",message="Field must be float")
      * @var float
      */
     private $weight;

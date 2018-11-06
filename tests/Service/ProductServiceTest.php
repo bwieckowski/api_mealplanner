@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: Mateusz
- * Date: 2018-10-27
- * Time: 15:55
- */
 
 namespace App\Tests\Service;
 
@@ -12,9 +6,12 @@ use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Validator\ConstraintViolationListInterface;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Service\ProductService;
+use App\Exception\ValidationException;
 use App\Exception\BadRequestException;
 use App\Exception\DeniedException;
 
@@ -24,6 +21,7 @@ class ProductServiceTest extends TestCase
     private $productRepositoryMock;
     private $paginatorMock;
     private $productService;
+    private $validatorMock;
 
     protected function setUp()
     {
@@ -39,10 +37,15 @@ class ProductServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
+        $this->validatorMock = $this->getMockBuilder(ValidatorInterface::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
         $this->productService = new ProductService(
             $this->productRepositoryMock,
             $this->emMock,
-            $this->paginatorMock
+            $this->paginatorMock,
+            $this->validatorMock
         );
 
     }
@@ -83,6 +86,12 @@ class ProductServiceTest extends TestCase
         $p1->setWeight(100);
         $p1->setUser($user);
 
+        $this->validatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->with($p1)
+            ->willReturn(null);
+
         $this->emMock
             ->expects($this->once())
             ->method('persist')
@@ -110,6 +119,37 @@ class ProductServiceTest extends TestCase
         $this->assertEquals($p1->getFat(), 30);
         $this->assertEquals($p1->getWeight(), 100);
         $this->assertEquals($p1->getUser(), $user);
+    }
+
+    public function testCreateWithInvalidData()
+    {
+        $user = $this->createUser();
+        $p1 = new Product();
+        $p1->setName('');
+        $p1->setCalory(100);
+        $p1->setProtein(20);
+        $p1->setCarbon(50);
+        $p1->setFat(30);
+        $p1->setWeight(100);
+        $p1->setUser($user);
+
+        $this->validatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->with($p1)
+            ->willReturn(ConstraintViolationListInterface::class);
+
+        $data = [
+            'name' => '',
+            'calory' => 100,
+            'protein' => 20,
+            'carbon' => 50,
+            'fat' => 30,
+            'weight' => 100
+        ];
+        $this->expectException(ValidationException::class);
+        $this->productService->create($data,$user);
+
     }
 
     public function testUpdate()
