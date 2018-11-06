@@ -34,6 +34,7 @@ class ProductRepository extends ServiceEntityRepository
     public function getOneById($id)
     {
         return $this->createQueryBuilder('p')
+            ->select('p.id')
             ->where('p.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
