@@ -5,6 +5,7 @@
         "php": "^7.1.3",
         "ext-ctype": "*",
         "ext-iconv": "*",
+        "doctrine/annotations": "^1.6",
         "friendsofsymfony/user-bundle": "~2.0",
         "jms/serializer-bundle": "^2.4",
         "knplabs/knp-paginator-bundle": "^2.8",
@@ -15,6 +16,7 @@
         "symfony/orm-pack": "^1.0",
         "symfony/phpunit-bridge": "*",
         "symfony/swiftmailer-bundle": "^3.2",
+        "symfony/validator": "*",
         "symfony/yaml": "*"
     },
     "require-dev": {
