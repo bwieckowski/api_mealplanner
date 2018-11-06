@@ -39,6 +39,8 @@ class Meal
 
     /**
      * @ORM\ManyToMany(targetEntity="Product", inversedBy="meals")
+     * @ORM\JoinTable(name="meal_product")
+     * @ORM\JoinColumn(nullable=false)
      */
     private $products;
 
@@ -82,7 +84,6 @@ class Meal
     {
         $this->products = new ArrayCollection();
     }
-
 
     public function getId()
     {
@@ -194,11 +195,6 @@ class Meal
     public function setWeight(float $weight): void
     {
         $this->weight = $weight;
-    }
-
-    public function getUser() : User
-    {
-        return $this->user;
     }
 
     public function setUser(User $user): void
