@@ -2,13 +2,13 @@
 
 namespace App\Exception;
 
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Exception;
 
-class ValidationException extends HttpException implements ApiExceptionInterface
+class ValidationException extends Exception implements ApiExceptionInterface
 {
-    public function __construct(string $message = 'Validation error', Exception $previous = null)
+    public function __construct(array $message, Exception $previous = null)
     {
-        parent::__construct(400, $message, $previous);
+        $message = json_encode($message);
+        parent::__construct($message, 400, $previous);
     }
 }

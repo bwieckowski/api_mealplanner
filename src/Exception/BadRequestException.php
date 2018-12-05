@@ -2,13 +2,12 @@
 
 namespace App\Exception;
 
-use Symfony\Component\HttpKernel\Exception\HttpException;
 use Exception;
 
-class BadRequestException extends HttpException implements ApiExceptionInterface
+class BadRequestException extends Exception implements ApiExceptionInterface
 {
     public function __construct(string $message = 'Bad request', Exception $previous = null)
     {
-        parent::__construct(400, $message, $previous);
+        parent::__construct($message, 400, $previous);
     }
 }
