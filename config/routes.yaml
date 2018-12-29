@@ -6,18 +6,20 @@ user_register:
     path: /register
     controller: App\Controller\RegistrationController::registerAction
     methods: [POST]
-
 user_login:
     path: /login
     controller: App\Controller\LoginController::loginAction
     methods: [POST]
-
 api_login_check:
     path: /login_check
 
 all_products:
     path: /api/products
     controller: App\Controller\ProductController::getAllPagination
+    methods: [GET]
+one_product:
+    path: /api/products/{id}
+    controller: App\Controller\ProductController::getOne
     methods: [GET]
 add_product:
     path: /api/products
@@ -30,4 +32,25 @@ update_product:
 delete_product:
     path: /api/products/{id}
     controller: App\Controller\ProductController::delete
+    methods: [DELETE]
+
+all_meals:
+    path: /api/meals
+    controller: App\Controller\MealController::getAllPagination
+    methods: [GET]
+one_meal:
+    path: /api/meals/{id}
+    controller: App\Controller\MealController::getOne
+    methods: [GET]
+add_meal:
+    path: /api/meals
+    controller: App\Controller\MealController::add
+    methods: [POST]
+update_meal:
+    path: /api/meals/{id}
+    controller: App\Controller\MealController::update
+    methods: [PUT]
+delete_meal:
+    path: /api/meals/{id}
+    controller: App\Controller\MealController::delete
     methods: [DELETE]

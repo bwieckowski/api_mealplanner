@@ -39,8 +39,6 @@ class Meal
 
     /**
      * @ORM\ManyToMany(targetEntity="Product", inversedBy="meals")
-     * @ORM\JoinTable(name="meal_product")
-     * @ORM\JoinColumn(nullable=false)
      */
     private $products;
 
@@ -200,6 +198,11 @@ class Meal
     public function setUser(User $user): void
     {
         $this->user = $user;
+    }
+
+    public function getUser() : User
+    {
+        return $this->user;
     }
 
 

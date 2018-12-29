@@ -17,7 +17,7 @@ class MealRepository extends ServiceEntityRepository
     public function getAllByUserIdQuery($id)
     {
         return $this->createQueryBuilder('m')
-            ->select('m.name as title,m.calory')
+            ->select('m.id, m.name')
             ->andWhere('m.user = :id')
             ->setParameter('id', $id)
             ->getQuery()
@@ -33,8 +33,7 @@ class MealRepository extends ServiceEntityRepository
     public function getOneById($id)
     {
         return $this->createQueryBuilder('m')
-            ->leftJoin('m.products', 'p')
-            ->select('m','p')
+            ->select('m')
             ->where('m.id = :id')
             ->setParameter('id', $id)
             ->getQuery()
