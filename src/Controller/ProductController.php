@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Product;
+use App\Factory\PaginationResponseFactory;
 use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,20 +24,23 @@ class ProductController extends AbstractController
         return $this->json($products);
     }
 
+    public function getOne($id)
+    {
+        $product = $this->productService->getOne($id);
+        if ($product instanceof Product) {
+            return $this->json("To jes prod");
+        }
+        return $this->json($product);
+    }
+
     public function getAllPagination(Request $request)
     {
         $userId = $this->getUser()->getId();
         $page = $request->query->getInt('page', 1);
-        $limit = $request->query->getInt('limit', 1);
+        $limit = $request->query->getInt('limit', 2);
         $pagination = $this->productService->getAllByUserIdPaginated($userId,$page,$limit);
-        $result = [
-            'current_page' => $pagination->getCurrentPageNumber(),
-            'items' => $pagination->getItems(),
-            'page_count' => ceil($pagination->getTotalItemCount()/$pagination->getItemNumberPerPage()),
-            'items_per_page' => $pagination->getItemNumberPerPage(),
-            'total_item_count' => $pagination->getTotalItemCount()
-        ];
-        return $this->json($result);
+        $factory = new PaginationResponseFactory();
+        return $factory->create($pagination);
     }
 
     public function add(Request $request)

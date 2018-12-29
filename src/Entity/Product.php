@@ -22,47 +22,47 @@ class Product
 
     /**
      * @ORM\Column(type="string")
-     * @Assert\NotBlank(message="Not be blank")
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @Assert\Type("string",message="Field must be string")
      * @var string
      */
     private $name;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
-     * @Assert\Type("int",message="Field must be int")
-     * @var int
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="This filed can not be blank")
+     * @Assert\Type("float",message="Field must be float")
+     * @var float
      */
     private $calory;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
-     * @Assert\Type("int",message="Field must be int")
-     * @var int
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="This filed can not be blank")
+     * @Assert\Type("float",message="Field must be float")
+     * @var float
      */
     private $protein;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
-     * @Assert\Type("int",message="Field must be int")
-     * @var int
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="This filed can not be blank")
+     * @Assert\Type("float",message="Field must be float")
+     * @var float
      */
     private $carbon;
 
     /**
-     * @ORM\Column(type="integer")
-     * @Assert\NotBlank()
-     * @Assert\Type("int",message="Field must be int")
-     * @var int
+     * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="This filed can not be blank")
+     * @Assert\Type("float",message="Field must be float")
+     * @var float
      */
     private $fat;
 
     /**
      * @ORM\Column(type="float")
-     * @Assert\NotBlank()
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @Assert\Type("float",message="Field must be float")
      * @var float
      */
@@ -104,42 +104,42 @@ class Product
         $this->name = $name;
     }
 
-    public function getCalory(): int
+    public function getCalory(): float
     {
         return $this->calory;
     }
 
-    public function setCalory(int $calory): void
+    public function setCalory(float $calory): void
     {
         $this->calory = $calory;
     }
 
-    public function getProtein(): int
+    public function getProtein(): float
     {
         return $this->protein;
     }
 
-    public function setProtein(int $protein): void
+    public function setProtein(float $protein): void
     {
         $this->protein = $protein;
     }
 
-    public function getCarbon(): int
+    public function getCarbon(): float
     {
         return $this->carbon;
     }
 
-    public function setCarbon(int $carbon): void
+    public function setCarbon(float $carbon): void
     {
         $this->carbon = $carbon;
     }
 
-    public function getFat(): int
+    public function getFat(): float
     {
         return $this->fat;
     }
 
-    public function setFat(int $fat): void
+    public function setFat(float $fat): void
     {
         $this->fat = $fat;
     }

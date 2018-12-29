@@ -10,7 +10,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Exception\BadRequestException;
-use App\Exception\DeniedException;
+use App\Exception\AccessDeniedException;
 
 class ProductService
 {
@@ -41,6 +41,11 @@ class ProductService
         return $this->paginator->paginate($query,$page,$limit);
     }
 
+    public function getOne($id)
+    {
+        return $this->productRepository->getOneById($id);
+    }
+
     public function create(array $data, User $user)
     {
         $product = new Product();
@@ -52,9 +57,12 @@ class ProductService
         $product->setWeight($data['weight']);
         $product->setUser($user);
         $errors = $this->validator->validate($product);
-        if (!empty($errors)) {
-            $errorsString = (string) $errors;
-            throw new ValidationException($errorsString);
+        if ($errors !== null) {
+            $messages = [];
+            foreach ($errors as $violation) {
+                $messages[$violation->getPropertyPath()] = $violation->getMessage();
+            }
+            throw new ValidationException($messages);
         }
 
         $this->em->persist($product);
@@ -71,7 +79,7 @@ class ProductService
         }
 
         if ($product->getUser()->getId() != $user->getId()) {
-            throw new DeniedException('The product have not got to you !');
+            throw new AccessDeniedException('The product have not got to you !');
         }
 
         $product->setName($data['name']);
@@ -92,7 +100,7 @@ class ProductService
         }
 
         if ($product->getUser()->getId() != $user->getId()) {
-            throw new DeniedException('The product have not got to you !');
+            throw new AccessDeniedException('The product have not got to you !');
         }
 
         $this->em->remove($product);

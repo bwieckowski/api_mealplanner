@@ -7,13 +7,13 @@ use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Validator\ConstraintViolationListInterface;
+use Symfony\Component\Validator\ConstraintViolation;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Service\ProductService;
 use App\Exception\ValidationException;
 use App\Exception\BadRequestException;
-use App\Exception\DeniedException;
+use App\Exception\AccessDeniedException;
 
 class ProductServiceTest extends TestCase
 {
@@ -119,6 +119,7 @@ class ProductServiceTest extends TestCase
         $this->assertEquals($p1->getFat(), 30);
         $this->assertEquals($p1->getWeight(), 100);
         $this->assertEquals($p1->getUser(), $user);
+
     }
 
     public function testCreateWithInvalidData()
@@ -133,11 +134,27 @@ class ProductServiceTest extends TestCase
         $p1->setWeight(100);
         $p1->setUser($user);
 
+        $constraint = $this->getMockBuilder(ConstraintViolation::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $constraint
+            ->expects($this->once())
+            ->method('getPropertyPath')
+            ->with()
+            ->willReturn("name");
+
+        $constraint
+            ->expects($this->once())
+            ->method('getMessage')
+            ->with()
+            ->willReturn("This filed can not be blank");
+
         $this->validatorMock
             ->expects($this->once())
             ->method('validate')
             ->with($p1)
-            ->willReturn(ConstraintViolationListInterface::class);
+            ->willReturn([$constraint]);
 
         $data = [
             'name' => '',
@@ -244,7 +261,7 @@ class ProductServiceTest extends TestCase
             'fat' => 30,
             'weight' => 100
         ];
-        $this->expectException(DeniedException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->productService->update($data,1,$user2);
     }
 
@@ -313,7 +330,7 @@ class ProductServiceTest extends TestCase
             ->with(1)
             ->willReturn($product);
 
-        $this->expectException(DeniedException::class);
+        $this->expectException(AccessDeniedException::class);
         $this->productService->delete(1,$user2);
     }
 
