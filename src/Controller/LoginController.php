@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Exception\BadCredentialsException;
+use Symfony\Component\Security\Core\Exception\BadCredentialsException;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
@@ -39,7 +39,7 @@ class LoginController
         $isValid = $this->passwordEncoder->isPasswordValid($user,$data['password']);
 
         if (!$isValid) {
-            throw new BadCredentialsException("Bad credentials");
+            throw new BadCredentialsException();
         }
         $token = $this->jwtEncoder->encode(['username' => $data['username'],'exp' => time() + 3600]);
 

@@ -10,7 +10,7 @@ class LoginTest extends TestCase
     public function testLogin()
     {
         $data = [
-            'username' => 'smati',
+            'username' => 'Supernick',
             'password' => 'test123',
         ];
         $client = new \GuzzleHttp\Client();
@@ -33,7 +33,7 @@ class LoginTest extends TestCase
             $res = $e->getResponse();
         }
 
-        $this->assertEquals(400, $res->getStatusCode());
+        $this->assertEquals(401, $res->getStatusCode());
     }
 
 }

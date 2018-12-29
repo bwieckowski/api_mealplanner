@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Exception\ValidationException;
+use App\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use App\Service\RegistrationService;
@@ -20,7 +20,7 @@ class RegistrationController
     {
         $data = json_decode($request->getContent(), true);
         if ($data === null) {
-            throw new ValidationException('Bad request');
+            throw new BadRequestException;
         }
         $this->registrationService->register($data);
         return new JsonResponse('Created', 201);
