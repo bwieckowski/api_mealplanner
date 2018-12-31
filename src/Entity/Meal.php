@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -21,6 +22,7 @@ class Meal
 
     /**
      * @ORM\Column(type="string")
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @var string
      */
     private $name;
@@ -33,6 +35,7 @@ class Meal
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
     private $portions;
@@ -44,30 +47,35 @@ class Meal
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
     private $calory;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
     private $protein;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
     private $carbon;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
     private $fat;
 
     /**
      * @ORM\Column(type="float")
+     * @Assert\NotBlank(message="This filed can not be blank")
      * @var float
      */
     private $weight;

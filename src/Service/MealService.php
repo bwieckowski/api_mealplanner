@@ -11,6 +11,7 @@ use App\Entity\User;
 use App\Repository\ProductRepository;
 use App\Exception\BadRequestException;
 use App\Exception\AccessDeniedException;
+use App\Exception\ValidationException;
 
 class MealService
 {
@@ -65,6 +66,14 @@ class MealService
             $product = $this->productRepository->getOneById($id);
             $meal->addProduct($product);
         }
+        $errors = $this->validator->validate($meal);
+        if (count($errors) > 0) {
+            $messages = [];
+            foreach ($errors as $violation) {
+                $messages[$violation->getPropertyPath()] = $violation->getMessage();
+            }
+            throw new ValidationException($messages);
+        }
 
         $this->em->persist($meal);
         $this->em->flush();
@@ -95,6 +104,14 @@ class MealService
         foreach ($data['products'] as &$id) {
             $product = $this->productRepository->getOneById($id);
             $meal->addProduct($product);
+        }
+        $errors = $this->validator->validate($meal);
+        if (count($errors) > 0) {
+            $messages = [];
+            foreach ($errors as $violation) {
+                $messages[$violation->getPropertyPath()] = $violation->getMessage();
+            }
+            throw new ValidationException($messages);
         }
 
         $this->em->flush();
