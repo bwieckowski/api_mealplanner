@@ -1,11 +1,11 @@
-index:
-    path: /api
-    controller: App\Controller\DefaultController::index
-
 user_register:
     path: /register
     controller: App\Controller\RegistrationController::registerAction
     methods: [POST]
+user_change_password:
+    path: /api/changedata
+    controller: App\Controller\ChangeUserDataController::changeUserDataAction
+    methods: [PUT]
 user_login:
     path: /login
     controller: App\Controller\LoginController::loginAction
@@ -53,4 +53,21 @@ update_meal:
 delete_meal:
     path: /api/meals/{id}
     controller: App\Controller\MealController::delete
+    methods: [DELETE]
+
+one_userdetails:
+    path: /api/user/details
+    controller: App\Controller\PersonDetailsController::getDetailsForUser
+    methods: [GET]
+add_userdetails:
+    path: /api/user/details
+    controller: App\Controller\PersonDetailsController::add
+    methods: [POST]
+update_userdetails:
+    path: /api/user/details
+    controller: App\Controller\PersonDetailsController::update
+    methods: [PUT]
+delete_userdetails:
+    path: /api/user/details
+    controller: App\Controller\PersonDetailsController::delete
     methods: [DELETE]

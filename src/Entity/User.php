@@ -32,6 +32,12 @@ class User extends BaseUser
      */
     protected $meals;
 
+    /**
+     * @var type
+     * @ORM\OneToOne(targetEntity="PersonDetails", mappedBy="user")
+     */
+    protected $details;
+
     public function __construct()
     {
         parent::__construct();
@@ -50,8 +56,8 @@ class User extends BaseUser
     }
 
     /**
- * @return Collection | Product[]
- */
+    * @return Collection | Product[]
+    */
     public function getProducts() : Collection
     {
         return $this->products;

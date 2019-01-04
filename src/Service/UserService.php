@@ -6,8 +6,9 @@ use App\Exception\ValidationException;
 use FOS\UserBundle\Model\UserManagerInterface;
 use FOS\UserBundle\Form\Factory\FactoryInterface;
 use Symfony\Component\Form\FormInterface;
+use App\Entity\User;
 
-class RegistrationService
+class UserService
 {
     private $formFactory;
     private $userManager;
@@ -26,7 +27,19 @@ class RegistrationService
         $form->setData($user);
         $form->submit($data);
         if (!$form->isValid()) {
-            $errors = json_encode($this->getErrorsFromForm($form));
+            $errors = $this->getErrorsFromForm($form);
+            throw new ValidationException($errors);
+        }
+        $this->userManager->updateUser($user);
+    }
+
+    public function changeUserData($data,User $user)
+    {
+        $form = $this->formFactory->createForm(['csrf_protection' => false]);
+        $form->setData($user);
+        $form->submit($data);
+        if (!$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
             throw new ValidationException($errors);
         }
         $this->userManager->updateUser($user);
