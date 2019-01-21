@@ -5,15 +5,15 @@ namespace App\Controller;
 use App\Exception\BadRequestException;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Service\RegistrationService;
+use App\Service\UserService;
 
 class RegistrationController
 {
-    protected $registrationService;
+    protected $userService;
 
-    public function __construct(RegistrationService $registrationService)
+    public function __construct(UserService $userService)
     {
-        $this->registrationService = $registrationService;
+        $this->userService = $userService;
     }
 
     public function registerAction(Request $request)
@@ -22,7 +22,7 @@ class RegistrationController
         if ($data === null) {
             throw new BadRequestException;
         }
-        $this->registrationService->register($data);
+        $this->userService->register($data);
         return new JsonResponse('Created', 201);
     }
 }
