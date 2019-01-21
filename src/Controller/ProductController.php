@@ -7,14 +7,17 @@ use App\Factory\PaginationResponseFactory;
 use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
+use JMS\Serializer\SerializerInterface;
 
 class ProductController extends AbstractController
 {
     private $productService;
+    private $serializer;
 
-    public function __construct(ProductService $service)
+    public function __construct(ProductService $service,SerializerInterface $serializer)
     {
         $this->productService = $service;
+        $this->serializer = $serializer;
     }
 
     public function getAll()
@@ -26,10 +29,8 @@ class ProductController extends AbstractController
 
     public function getOne($id)
     {
-        $product = $this->productService->getOne($id);
-        if ($product instanceof Product) {
-            return $this->json("To jes prod");
-        }
+        $userId = $this->getUser()->getId();
+        $product = $this->productService->getOne($id,$userId);
         return $this->json($product);
     }
 

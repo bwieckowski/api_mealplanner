@@ -90,7 +90,7 @@ class ProductServiceTest extends TestCase
             ->expects($this->once())
             ->method('validate')
             ->with($p1)
-            ->willReturn(null);
+            ->willReturn([]);
 
         $this->emMock
             ->expects($this->once())
@@ -102,7 +102,7 @@ class ProductServiceTest extends TestCase
             ->method('flush');
 
         $data = [
-            'name' => 'Product 1',
+            'name' => "Product 1",
             'calory' => 100,
             'protein' => 20,
             'carbon' => 50,
@@ -187,6 +187,12 @@ class ProductServiceTest extends TestCase
             ->method('getOneById')
             ->with(1)
             ->willReturn($product);
+
+        $this->validatorMock
+            ->expects($this->once())
+            ->method('validate')
+            ->with($product)
+            ->willReturn([]);
 
         $this->emMock
             ->expects($this->once())

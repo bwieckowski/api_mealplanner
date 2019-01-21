@@ -41,4 +41,15 @@ class ProductRepository extends ServiceEntityRepository
             ->getSingleResult();
     }
 
+    public function getOneByIdWithSelectedFields($id,$userId)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.id, p.name as title')
+            ->where('p.id = :id')
+            ->andWhere('p.user = :userId')
+            ->setParameter('id', $id)
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

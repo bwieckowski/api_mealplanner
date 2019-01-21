@@ -31,7 +31,7 @@ class Product
     /**
      * @ORM\Column(type="float")
      * @Assert\NotBlank(message="This filed can not be blank")
-     * @Assert\Type("float",message="Field must be float")
+     * @Assert\Type(type="float",message="Field must be float")
      * @var float
      */
     private $calory;
@@ -70,18 +70,19 @@ class Product
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="products")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\JoinColumn(nullable=true)
      */
     private $user;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Meal", mappedBy="products")
+     * @ORM\OneToMany(targetEntity="MealProduct", mappedBy="product")
+     * @ORM\JoinColumn(nullable=true)
      */
-    private $meals;
+    private $mealProduct;
 
     public function __construct()
     {
-        $this->meals = new ArrayCollection();
+        //
     }
 
     public function getId()
@@ -164,29 +165,6 @@ class Product
         $this->user = $user;
     }
 
-    /**
-     * @return Collection|Meal[]
-     */
-    public function getMeals(): Collection
-    {
-        return $this->meals;
-    }
-
-    public function addMeal(Meal $meals)
-    {
-        if (!$this->meals->contains($meals)) {
-            $this->meals[] = $meals;
-            $meals->addProduct($this);
-        }
-    }
-
-    public function removeMeal(Meal $meals)
-    {
-        if ($this->meals->contains($meals)) {
-            $this->meals->removeElement($meals);
-            $meals->removeProduct($this);
-        }
-    }
 
 
 }

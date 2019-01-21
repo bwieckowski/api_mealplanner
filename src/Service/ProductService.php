@@ -41,9 +41,9 @@ class ProductService
         return $this->paginator->paginate($query,$page,$limit);
     }
 
-    public function getOne($id)
+    public function getOne($id,$userId)
     {
-        return $this->productRepository->getOneById($id);
+        return $this->productRepository->getOneByIdWithSelectedFields($id,$userId);
     }
 
     public function create(array $data, User $user)
@@ -57,7 +57,7 @@ class ProductService
         $product->setWeight($data['weight']);
         $product->setUser($user);
         $errors = $this->validator->validate($product);
-        if ($errors !== null) {
+        if (count($errors) > 0) {
             $messages = [];
             foreach ($errors as $violation) {
                 $messages[$violation->getPropertyPath()] = $violation->getMessage();
@@ -88,7 +88,14 @@ class ProductService
         $product->setCarbon($data['carbon']);
         $product->setFat($data['fat']);
         $product->setWeight($data['weight']);
-
+        $errors = $this->validator->validate($product);
+        if (count($errors) > 0) {
+            $messages = [];
+            foreach ($errors as $violation) {
+                $messages[$violation->getPropertyPath()] = $violation->getMessage();
+            }
+            throw new ValidationException($messages);
+        }
         $this->em->flush();
     }
 
