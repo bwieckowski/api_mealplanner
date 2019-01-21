@@ -41,11 +41,6 @@ class Meal
     private $portions;
 
     /**
-     * @ORM\ManyToMany(targetEntity="Product", inversedBy="meals")
-     */
-    private $products;
-
-    /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
@@ -86,9 +81,15 @@ class Meal
      */
     private $user;
 
+    /**
+     * @ORM\OneToMany(targetEntity="MealProduct", mappedBy="meal")
+     * @ORM\JoinColumn(nullable=true)
+     */
+    private $mealProduct;
+
     public function __construct()
     {
-        $this->products = new ArrayCollection();
+        //
     }
 
     public function getId()
@@ -129,28 +130,6 @@ class Meal
     public function setPortions(int $portions): void
     {
         $this->portions = $portions;
-    }
-
-    /**
-     * @return Collection|Product[]
-     */
-    public function getProducts(): Collection
-    {
-        return $this->products;
-    }
-
-    public function addProduct(Product $products)
-    {
-        if (!$this->products->contains($products)) {
-            $this->products[] = $products;
-        }
-    }
-
-    public function removeProduct(Product $products)
-    {
-        if ($this->products->contains($products)) {
-            $this->products->removeElement($products);
-        }
     }
 
     public function getCalory(): int

@@ -32,11 +32,18 @@ class MealRepository extends ServiceEntityRepository
 
     public function getOneById($id)
     {
+        return $this->find($id);
+    }
+
+    public function getOneByIdWithSelectedFields($id,$userId)
+    {
         return $this->createQueryBuilder('m')
-            ->select('m')
+            ->select('m.id, m.name as title')
             ->where('m.id = :id')
+            ->andWhere('m.user = :userId')
             ->setParameter('id', $id)
+            ->setParameter('userId', $userId)
             ->getQuery()
-            ->getSingleResult();
+            ->getOneOrNullResult();
     }
 }

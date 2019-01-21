@@ -2,13 +2,14 @@
 
 namespace App\Tests\Service;
 
+use PHPUnit\Framework\TestCase;
 use App\Repository\MealRepository;
 use App\Service\MealService;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class MealServiceTest
+class MealServiceTest extends TestCase
 {
     private $emMock;
     private $mealRepositoryMock;
@@ -19,6 +20,10 @@ class MealServiceTest
     protected function setUp()
     {
         $this->mealRepositoryMock = $this->getMockBuilder(MealRepository::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $this->productRepositoryMock = $this->getMockBuilder(ProductRepository::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -38,7 +43,8 @@ class MealServiceTest
             $this->mealRepositoryMock,
             $this->emMock,
             $this->paginatorMock,
-            $this->validatorMock
+            $this->validatorMock,
+            $this->productRepositoryMock
         );
     }
 

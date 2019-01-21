@@ -6,8 +6,6 @@ use App\Service\MealService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use App\Factory\PaginationResponseFactory;
-use JMS\Serializer\SerializerInterface;
-use Symfony\Component\HttpFoundation\Response;
 
 class MealController extends AbstractController
 {
@@ -33,11 +31,11 @@ class MealController extends AbstractController
         return $factory->create($pagination);
     }
 
-    public function getOne($id,SerializerInterface $serializer)
+    public function getOne($id)
     {
-        $meal = $this->mealService->getOne($id);
-        $meal = $serializer->serialize($meal,'json');
-        return new Response($meal);
+        $user = $this->getUser();
+        $meal = $this->mealService->getOne($id,$user);
+        return $this->json($meal);
     }
 
     public function add(Request $request)
