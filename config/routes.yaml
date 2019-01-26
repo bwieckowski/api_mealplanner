@@ -71,3 +71,20 @@ delete_userdetails:
     path: /api/user/details
     controller: App\Controller\PersonDetailsController::delete
     methods: [DELETE]
+
+show_planner:
+    path: /api/planner
+    controller: App\Controller\PlannerController::getItemsForWeek
+    methods: [GET]
+add_item_to_planner:
+    path: /api/planner
+    controller: App\Controller\PlannerController::addItem
+    methods: [POST]
+change_position_item_planner:
+    path: /api/planner/item/{id}
+    controller: App\Controller\PlannerController::changePosition
+    methods: [PATCH]
+delete_item_planner:
+    path: /api/planner/item/{id}
+    controller: App\Controller\PlannerController::deleteItem
+    methods: [DELETE]

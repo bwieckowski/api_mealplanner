@@ -34,6 +34,12 @@ class User extends BaseUser
 
     /**
      * @var type
+     * @ORM\OneToMany(targetEntity="PlannerItem", mappedBy="user")
+     */
+    protected $planner;
+
+    /**
+     * @var type
      * @ORM\OneToOne(targetEntity="PersonDetails", mappedBy="user")
      */
     protected $details;

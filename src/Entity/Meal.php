@@ -82,6 +82,12 @@ class Meal
     private $user;
 
     /**
+     * @var type
+     * @ORM\OneToMany(targetEntity="PlannerItem", mappedBy="meal")
+     */
+    private $planner;
+
+    /**
      * @ORM\OneToMany(targetEntity="MealProduct", mappedBy="meal")
      * @ORM\JoinColumn(nullable=true)
      */
