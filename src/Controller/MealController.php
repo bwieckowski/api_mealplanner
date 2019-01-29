@@ -21,7 +21,7 @@ class MealController extends AbstractController
        //
     }
 
-    public function getAllPagination(Request $request)
+    public function getAllPaginated(Request $request)
     {
         $userId = $this->getUser()->getId();
         $page = $request->query->getInt('page', 1);
@@ -29,6 +29,19 @@ class MealController extends AbstractController
         $pagination = $this->mealService->getAllByUserIdPaginated($userId,$page,$limit);
         $factory = new PaginationResponseFactory();
         return $factory->create($pagination);
+    }
+
+    public function getViaNamePaginated(Request $request)
+    {
+        $userId = $this->getUser()->getId();
+        $page = $request->query->getInt('page', 1);
+        $limit = $request->query->getInt('limit', 2);
+        $search = $request->query->getAlpha('q');
+        $products = $this->mealService->getViaNamePaginated($search,$userId,$page,$limit);
+
+        $factory = new PaginationResponseFactory();
+        return $factory->create($products);
+
     }
 
     public function getOne($id)

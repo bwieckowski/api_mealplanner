@@ -50,6 +50,12 @@ class MealService
         return $this->paginator->paginate($query,$page,$limit);
     }
 
+    public function getViaNamePaginated($search,$userId,$page,$limit)
+    {
+        $query = $this->mealRepository->SearchViaNameAndUserIdQuery($search,$userId);
+        return $this->paginator->paginate($query,$page,$limit);
+    }
+
     public function getOne($id,$user)
     {
         $meal =  $this->mealRepository->getOneByIdWithSelectedFields($id,$user->getId());

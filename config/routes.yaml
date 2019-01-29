@@ -15,7 +15,11 @@ api_login_check:
 
 all_products:
     path: /api/products
-    controller: App\Controller\ProductController::getAllPagination
+    controller: App\Controller\ProductController::getAllPaginated
+    methods: [GET]
+search_products:
+    path: /api/products/search
+    controller: App\Controller\ProductController::getViaNamePaginated
     methods: [GET]
 one_product:
     path: /api/products/{id}
@@ -36,7 +40,11 @@ delete_product:
 
 all_meals:
     path: /api/meals
-    controller: App\Controller\MealController::getAllPagination
+    controller: App\Controller\MealController::getAllPaginated
+    methods: [GET]
+search_meals:
+    path: /api/meals/search
+    controller: App\Controller\MealController::getViaNamePaginated
     methods: [GET]
 one_meal:
     path: /api/meals/{id}

@@ -14,12 +14,24 @@ class MealRepository extends ServiceEntityRepository
         parent::__construct($registry, Meal::class);
     }
 
-    public function getAllByUserIdQuery($id)
+    public function getAllByUserIdQuery($userId)
     {
         return $this->createQueryBuilder('m')
             ->select('m.id, m.name')
-            ->andWhere('m.user = :id')
-            ->setParameter('id', $id)
+            ->andWhere('m.user = :userId')
+            ->setParameter('userId', $userId)
+            ->getQuery()
+            ;
+    }
+
+    public function SearchViaNameAndUserIdQuery($search,$userId)
+    {
+        return $this->createQueryBuilder('m')
+            ->select('m.id, m.name')
+            ->andWhere('m.name LIKE :search')
+            ->andWhere('m.user = :userId')
+            ->setParameter('search', '%'.$search.'%')
+            ->setParameter('userId', $userId)
             ->getQuery()
             ;
     }
@@ -32,7 +44,12 @@ class MealRepository extends ServiceEntityRepository
 
     public function getOneById($id)
     {
-        return $this->find($id);
+        return $this->createQueryBuilder('m')
+            ->select('m')
+            ->where('m.id = :id')
+            ->setParameter('id', $id)
+            ->getQuery()
+            ->getSingleResult();
     }
 
     public function getOneByIdWithSelectedFields($id,$userId)
