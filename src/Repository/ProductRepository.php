@@ -25,6 +25,19 @@ class ProductRepository extends ServiceEntityRepository
             ;
     }
 
+    public function searchViaNameAndUserIdQuery($search,$userId)
+    {
+        return $this->createQueryBuilder('p')
+            ->select('p.name, p.calory, p.protein, p.carbon, p.fat, p.weight')
+            ->andWhere('p.name LIKE :search')
+            ->andWhere('p.user = :userId')
+            ->setParameter('search', '%'.$search.'%')
+            ->setParameter('userId', $userId)
+            ->orderBy('p.name', 'ASC')
+            ->getQuery()
+            ;
+    }
+
     public function getAllByUserId($id)
     {
         return $this->getAllByUserIdQuery($id)

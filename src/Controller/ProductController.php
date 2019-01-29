@@ -27,6 +27,19 @@ class ProductController extends AbstractController
         return $this->json($products);
     }
 
+    public function getViaNamePaginated(Request $request)
+    {
+        $userId = $this->getUser()->getId();
+        $page = $request->query->getInt('page', 1);
+        $limit = $request->query->getInt('limit', 2);
+        $search = $request->query->getAlpha('q');
+        $products = $this->productService->getViaNamePaginated($search,$userId,$page,$limit);
+
+        $factory = new PaginationResponseFactory();
+        return $factory->create($products);
+
+    }
+
     public function getOne($id)
     {
         $userId = $this->getUser()->getId();
@@ -34,7 +47,7 @@ class ProductController extends AbstractController
         return $this->json($product);
     }
 
-    public function getAllPagination(Request $request)
+    public function getAllPaginated(Request $request)
     {
         $userId = $this->getUser()->getId();
         $page = $request->query->getInt('page', 1);

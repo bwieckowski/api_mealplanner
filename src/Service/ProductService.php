@@ -41,6 +41,12 @@ class ProductService
         return $this->paginator->paginate($query,$page,$limit);
     }
 
+    public function getViaNamePaginated($search,$userId,$page,$limit)
+    {
+        $query = $this->productRepository->searchViaNameAndUserIdQuery($search,$userId);
+        return $this->paginator->paginate($query,$page,$limit);
+    }
+
     public function getOne($id,$userId)
     {
         return $this->productRepository->getOneByIdWithSelectedFields($id,$userId);
