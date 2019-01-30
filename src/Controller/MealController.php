@@ -16,11 +16,6 @@ class MealController extends AbstractController
         $this->mealService = $service;
     }
 
-    public function getAll()
-    {
-       //
-    }
-
     public function getAllPaginated(Request $request)
     {
         $userId = $this->getUser()->getId();

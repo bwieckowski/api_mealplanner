@@ -5,7 +5,6 @@ namespace App\Controller;
 use App\Service\PersonDetailsService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use JMS\Serializer\SerializerInterface;
 
 class PersonDetailsController extends AbstractController
 {
@@ -16,7 +15,7 @@ class PersonDetailsController extends AbstractController
         $this->detailsService = $service;
     }
 
-    public function getDetailsForUser(SerializerInterface $serializer)
+    public function getDetailsForUser()
     {
         $userId = $this->getUser()->getId();
         $details = $this->detailsService->getDetailsByUserId($userId);

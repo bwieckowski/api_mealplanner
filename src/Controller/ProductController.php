@@ -2,22 +2,18 @@
 
 namespace App\Controller;
 
-use App\Entity\Product;
 use App\Factory\PaginationResponseFactory;
 use App\Service\ProductService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
-use JMS\Serializer\SerializerInterface;
 
 class ProductController extends AbstractController
 {
     private $productService;
-    private $serializer;
 
-    public function __construct(ProductService $service,SerializerInterface $serializer)
+    public function __construct(ProductService $service)
     {
         $this->productService = $service;
-        $this->serializer = $serializer;
     }
 
     public function getAll()

@@ -91,7 +91,7 @@ class PersonDetailsService
     {
         $details = $this->detailsRepository->getOneByUserId($userId);
         if (!$details) {
-            throw new BadRequestException('The product not found');
+            throw new BadRequestException('Details not found');
         }
 
         $this->em->remove($details);

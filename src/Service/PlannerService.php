@@ -2,13 +2,11 @@
 
 namespace App\Service;
 
-use App\Entity\Meal;
 use App\Entity\PlannerItem;
 use App\Repository\MealRepository;
 use App\Repository\PlannerItemRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Exception\AccessDeniedException;
-use DateTime;
 use App\Entity\User;
 
 class PlannerService
@@ -35,7 +33,7 @@ class PlannerService
     public function addItem(array $data, User $user)
     {
         $meal = $this->mealRepository->getOneById($data['meal']);
-        $date = DateTime::createFromFormat('Y-m-d H:i:s',$data['date']);
+        $date = \DateTime::createFromFormat('Y-m-d H:i:s',$data['date']);
         $plannerItem = new PlannerItem();
         $plannerItem->setMeal($meal);
         $plannerItem->setDate($date);

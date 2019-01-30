@@ -108,7 +108,7 @@ class MealService
     public function update(array $data,$id,User $user)
     {
         $meal = $this->mealRepository->getOneById($id);
-        $mealProduct = $this->mealProductRepository->getRecordsByMealId($id);
+        $mealProducts = $this->mealProductRepository->getRecordsByMealId($id);
         if (!$meal) {
             throw new BadRequestException('The product not found');
         }
@@ -128,7 +128,7 @@ class MealService
 
         foreach ($data['products'] as $item) {
             $product = $this->productRepository->getOneById($item['id']);
-            foreach ($mealProduct as $record) {
+            foreach ($mealProducts as $record) {
                 $record->setProduct($product);
                 $record->setAmount($item['amount']);
                 $record->setMeal($meal);
