@@ -95,7 +95,7 @@ class Product
         $this->id = $id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -105,7 +105,7 @@ class Product
         $this->name = $name;
     }
 
-    public function getCalory(): float
+    public function getCalory(): ?float
     {
         return $this->calory;
     }
@@ -115,7 +115,7 @@ class Product
         $this->calory = $calory;
     }
 
-    public function getProtein(): float
+    public function getProtein(): ?float
     {
         return $this->protein;
     }
@@ -125,7 +125,7 @@ class Product
         $this->protein = $protein;
     }
 
-    public function getCarbon(): float
+    public function getCarbon(): ?float
     {
         return $this->carbon;
     }
@@ -135,7 +135,7 @@ class Product
         $this->carbon = $carbon;
     }
 
-    public function getFat(): float
+    public function getFat(): ?float
     {
         return $this->fat;
     }
@@ -145,7 +145,7 @@ class Product
         $this->fat = $fat;
     }
 
-    public function getWeight(): float
+    public function getWeight(): ?float
     {
         return $this->weight;
     }

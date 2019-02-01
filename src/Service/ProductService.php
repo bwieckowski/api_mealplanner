@@ -3,10 +3,12 @@
 namespace App\Service;
 
 use App\Exception\ValidationException;
+use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use App\Entity\Product;
 use App\Entity\User;
 use App\Exception\BadRequestException;
@@ -17,17 +19,17 @@ class ProductService
     private $productRepository;
     private $em;
     private $paginator;
-    private $validator;
+    private $formFactory;
 
     public function __construct(ProductRepository $productRepository,
                                 EntityManagerInterface $em,
                                 PaginatorInterface $paginator,
-                                ValidatorInterface $validator)
+                                FormFactoryInterface $formFactory)
     {
         $this->productRepository = $productRepository;
         $this->em = $em;
         $this->paginator = $paginator;
-        $this->validator = $validator;
+        $this->formFactory = $formFactory;
     }
 
     public function getAllByUserId($userId)
@@ -55,22 +57,13 @@ class ProductService
     public function create(array $data, User $user)
     {
         $product = new Product();
-        $product->setName($data['name']);
-        $product->setCalory($data['calory']);
-        $product->setProtein($data['protein']);
-        $product->setCarbon($data['carbon']);
-        $product->setFat($data['fat']);
-        $product->setWeight($data['weight']);
-        $product->setUser($user);
-        $errors = $this->validator->validate($product);
-        if (count($errors) > 0) {
-            $messages = [];
-            foreach ($errors as $violation) {
-                $messages[$violation->getPropertyPath()] = $violation->getMessage();
-            }
-            throw new ValidationException($messages);
+        $form = $this->formFactory->create(ProductType::class,$product);
+        $form->submit($data);
+        if (!$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
+            throw new ValidationException($errors);
         }
-
+        $product->setUser($user);
         $this->em->persist($product);
         $this->em->flush();
 
@@ -88,19 +81,11 @@ class ProductService
             throw new AccessDeniedException('The product have not got to you !');
         }
 
-        $product->setName($data['name']);
-        $product->setCalory($data['calory']);
-        $product->setProtein($data['protein']);
-        $product->setCarbon($data['carbon']);
-        $product->setFat($data['fat']);
-        $product->setWeight($data['weight']);
-        $errors = $this->validator->validate($product);
-        if (count($errors) > 0) {
-            $messages = [];
-            foreach ($errors as $violation) {
-                $messages[$violation->getPropertyPath()] = $violation->getMessage();
-            }
-            throw new ValidationException($messages);
+        $form = $this->formFactory->create(ProductType::class,$product);
+        $form->submit($data);
+        if (!$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
+            throw new ValidationException($errors);
         }
         $this->em->flush();
     }
@@ -118,6 +103,22 @@ class ProductService
 
         $this->em->remove($product);
         $this->em->flush();
+    }
+
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = array();
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
+                if ($childErrors = $this->getErrorsFromForm($childForm)) {
+                    $errors[$childForm->getName()] = $childErrors;
+                }
+            }
+        }
+        return $errors;
     }
 
 
