@@ -91,7 +91,7 @@ class PersonDetails
     /**
      * @return string
      */
-    public function getSex(): string
+    public function getSex(): ?string
     {
         return $this->sex;
     }
@@ -107,7 +107,7 @@ class PersonDetails
     /**
      * @return float
      */
-    public function getCalory(): float
+    public function getCalory(): ?float
     {
         return $this->calory;
     }
@@ -123,7 +123,7 @@ class PersonDetails
     /**
      * @return float
      */
-    public function getProtein(): float
+    public function getProtein(): ?float
     {
         return $this->protein;
     }
@@ -139,7 +139,7 @@ class PersonDetails
     /**
      * @return float
      */
-    public function getCarbon(): float
+    public function getCarbon(): ?float
     {
         return $this->carbon;
     }
@@ -155,7 +155,7 @@ class PersonDetails
     /**
      * @return float
      */
-    public function getFat(): float
+    public function getFat(): ?float
     {
         return $this->fat;
     }
@@ -171,7 +171,7 @@ class PersonDetails
     /**
      * @return float
      */
-    public function getWeight(): float
+    public function getWeight(): ?float
     {
         return $this->weight;
     }
@@ -187,7 +187,7 @@ class PersonDetails
     /**
      * @return float
      */
-    public function getHeight(): float
+    public function getHeight(): ?float
     {
         return $this->height;
     }
