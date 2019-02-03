@@ -25,18 +25,6 @@ class MealProductRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    public function getRecordByMealAndProductId($mealId,$productId)
-    {
-        return $this->createQueryBuilder('e')
-            ->select('e')
-            ->where('e.meal = :mealId')
-            ->andWhere('e.product = :productId')
-            ->setParameter('mealId', $mealId)
-            ->setParameter('productId', $productId)
-            ->getQuery()
-            ->getSingleResult();
-    }
-
     public function getRecordsByMealId($mealId)
     {
         return $this->createQueryBuilder('e')

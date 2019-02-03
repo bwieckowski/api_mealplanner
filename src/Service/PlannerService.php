@@ -35,10 +35,10 @@ class PlannerService
         $meal = $this->mealRepository->getOneById($data['meal']);
         $date = \DateTime::createFromFormat('Y-m-d H:i:s',$data['date']);
         $plannerItem = new PlannerItem();
-        $plannerItem->setMeal($meal);
         $plannerItem->setDate($date);
         $plannerItem->setColor($data['color']);
         $plannerItem->setPosition($data['position']);
+        $plannerItem->setMeal($meal);
         $plannerItem->setUser($user);
 
         $this->em->persist($plannerItem);

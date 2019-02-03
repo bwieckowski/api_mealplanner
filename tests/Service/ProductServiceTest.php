@@ -6,8 +6,7 @@ use App\Entity\User;
 use PHPUnit\Framework\TestCase;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
-use Symfony\Component\Validator\ConstraintViolation;
+use Symfony\Component\Form\FormFactoryInterface;
 use App\Entity\Product;
 use App\Repository\ProductRepository;
 use App\Service\ProductService;
@@ -21,7 +20,7 @@ class ProductServiceTest extends TestCase
     private $productRepositoryMock;
     private $paginatorMock;
     private $productService;
-    private $validatorMock;
+    private $formFactoryMock;
 
     protected function setUp()
     {
@@ -37,7 +36,7 @@ class ProductServiceTest extends TestCase
             ->disableOriginalConstructor()
             ->getMock();
 
-        $this->validatorMock = $this->getMockBuilder(ValidatorInterface::class)
+        $this->formFactoryMock = $this->getMockBuilder(FormFactoryInterface::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -45,7 +44,7 @@ class ProductServiceTest extends TestCase
             $this->productRepositoryMock,
             $this->emMock,
             $this->paginatorMock,
-            $this->validatorMock
+            $this->formFactoryMock
         );
 
     }
@@ -76,199 +75,27 @@ class ProductServiceTest extends TestCase
 
     public function testCreate()
     {
-        $user = $this->createUser();
-        $p1 = new Product();
-        $p1->setName('Product 1');
-        $p1->setCalory(100);
-        $p1->setProtein(20);
-        $p1->setCarbon(50);
-        $p1->setFat(30);
-        $p1->setWeight(100);
-        $p1->setUser($user);
-
-        $this->validatorMock
-            ->expects($this->once())
-            ->method('validate')
-            ->with($p1)
-            ->willReturn([]);
-
-        $this->emMock
-            ->expects($this->once())
-            ->method('persist')
-            ->with($p1);
-
-        $this->emMock
-            ->expects($this->once())
-            ->method('flush');
-
-        $data = [
-            'name' => "Product 1",
-            'calory' => 100,
-            'protein' => 20,
-            'carbon' => 50,
-            'fat' => 30,
-            'weight' => 100
-        ];
-        $result = $this->productService->create($data,$user);
-
-        $this->assertEquals($p1->getId(), $result);
-        $this->assertEquals($p1->getName(), 'Product 1');
-        $this->assertEquals($p1->getCalory(), 100);
-        $this->assertEquals($p1->getProtein(), 20);
-        $this->assertEquals($p1->getCarbon(), 50);
-        $this->assertEquals($p1->getFat(), 30);
-        $this->assertEquals($p1->getWeight(), 100);
-        $this->assertEquals($p1->getUser(), $user);
-
+        //TODO
     }
 
     public function testCreateWithInvalidData()
     {
-        $user = $this->createUser();
-        $p1 = new Product();
-        $p1->setName('');
-        $p1->setCalory(100);
-        $p1->setProtein(20);
-        $p1->setCarbon(50);
-        $p1->setFat(30);
-        $p1->setWeight(100);
-        $p1->setUser($user);
-
-        $constraint = $this->getMockBuilder(ConstraintViolation::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $constraint
-            ->expects($this->once())
-            ->method('getPropertyPath')
-            ->with()
-            ->willReturn("name");
-
-        $constraint
-            ->expects($this->once())
-            ->method('getMessage')
-            ->with()
-            ->willReturn("This filed can not be blank");
-
-        $this->validatorMock
-            ->expects($this->once())
-            ->method('validate')
-            ->with($p1)
-            ->willReturn([$constraint]);
-
-        $data = [
-            'name' => '',
-            'calory' => 100,
-            'protein' => 20,
-            'carbon' => 50,
-            'fat' => 30,
-            'weight' => 100
-        ];
-        $this->expectException(ValidationException::class);
-        $this->productService->create($data,$user);
-
+        //TODO
     }
 
     public function testUpdate()
     {
-        $user = $this->createUser();
-        $product = new Product();
-        $product->setId(1);
-        $product->setName('Product 1');
-        $product->setCalory(100);
-        $product->setProtein(20);
-        $product->setCarbon(50);
-        $product->setFat(30);
-        $product->setWeight(100);
-        $product->setUser($user);
-
-        $this->productRepositoryMock
-            ->expects($this->once())
-            ->method('getOneById')
-            ->with(1)
-            ->willReturn($product);
-
-        $this->validatorMock
-            ->expects($this->once())
-            ->method('validate')
-            ->with($product)
-            ->willReturn([]);
-
-        $this->emMock
-            ->expects($this->once())
-            ->method('flush');
-
-        $data = [
-            'name' => 'Product 1',
-            'calory' => 100,
-            'protein' => 20,
-            'carbon' => 50,
-            'fat' => 30,
-            'weight' => 100
-        ];
-        $this->productService->update($data,1,$user);
-
-        $this->assertEquals($product->getName(), 'Product 1');
-        $this->assertEquals($product->getCalory(), 100);
-        $this->assertEquals($product->getProtein(), 20);
-        $this->assertEquals($product->getCarbon(), 50);
-        $this->assertEquals($product->getFat(), 30);
-        $this->assertEquals($product->getWeight(), 100);
-        $this->assertEquals($product->getUser(), $user);
+        //TODO
     }
 
     public function testUpdateShouldThrowExceptionForInvalidProductId()
     {
-        $id = 225;
-        $data = [
-            'name' => 'Product 1',
-            'calory' => 100,
-            'protein' => 20,
-            'carbon' => 50,
-            'fat' => 30,
-            'weight' => 100
-        ];
-        $user = $this->createUser();
-        $this->productRepositoryMock
-            ->expects($this->once())
-            ->method('getOneById')
-            ->with($id)
-            ->willReturn(null);
-        $this->expectException(BadRequestException::class);
-        $this->productService->update($data,$id,$user);
+        //TODO
     }
 
     public function testUpdateShouldThrowExceptionForBadUser()
     {
-        $user = $this->createUser();
-        $user2 = new User();
-        $user2->setId(2);
-        $product = new Product();
-        $product->setId(1);
-        $product->setName('Product 1');
-        $product->setCalory(100);
-        $product->setProtein(20);
-        $product->setCarbon(50);
-        $product->setFat(30);
-        $product->setWeight(100);
-        $product->setUser($user);
-
-        $this->productRepositoryMock
-            ->expects($this->once())
-            ->method('getOneById')
-            ->with(1)
-            ->willReturn($product);
-
-        $data = [
-            'name' => 'Product 1',
-            'calory' => 100,
-            'protein' => 20,
-            'carbon' => 50,
-            'fat' => 30,
-            'weight' => 100
-        ];
-        $this->expectException(AccessDeniedException::class);
-        $this->productService->update($data,1,$user2);
+        //TODO
     }
 
     public function testDelete()

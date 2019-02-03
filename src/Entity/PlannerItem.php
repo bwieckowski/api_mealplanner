@@ -95,7 +95,7 @@ class PlannerItem
     /**
      * @return string
      */
-    public function getColor(): string
+    public function getColor(): ?string
     {
         return $this->color;
     }
@@ -111,7 +111,7 @@ class PlannerItem
     /**
      * @return int
      */
-    public function getPosition(): int
+    public function getPosition(): ?int
     {
         return $this->position;
     }
