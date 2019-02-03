@@ -12,7 +12,6 @@ services:
     FOS\UserBundle\Model\UserManagerInterface: '@fos_user.user_manager'
     Knp\Component\Pager\PaginatorInterface: '@knp_paginator'
 
-
     App\Event\ExceptionSubscriber:
             tags:
                 - { name: kernel.subscriber, event: kernel.exception }

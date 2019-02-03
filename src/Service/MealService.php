@@ -4,11 +4,13 @@ namespace App\Service;
 
 use App\Entity\Meal;
 use App\Entity\MealProduct;
+use App\Form\MealType;
 use App\Repository\MealRepository;
 use App\Repository\MealProductRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Knp\Component\Pager\PaginatorInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Symfony\Component\Form\FormFactoryInterface;
+use Symfony\Component\Form\FormInterface;
 use App\Entity\User;
 use App\Repository\ProductRepository;
 use App\Exception\BadRequestException;
@@ -22,19 +24,19 @@ class MealService
     private $mealProductRepository;
     private $em;
     private $paginator;
-    private $validator;
+    private $formFactory;
 
     public function __construct(MealRepository $mealRepository,
                                 EntityManagerInterface $em,
                                 PaginatorInterface $paginator,
-                                ValidatorInterface $validator,
+                                FormFactoryInterface $formFactory,
                                 ProductRepository $productRepository,
                                 MealProductRepository $mealProductRepository)
     {
         $this->mealRepository = $mealRepository;
         $this->em = $em;
         $this->paginator = $paginator;
-        $this->validator = $validator;
+        $this->formFactory = $formFactory;
         $this->productRepository = $productRepository;
         $this->mealProductRepository = $mealProductRepository;
     }
@@ -71,18 +73,18 @@ class MealService
 
     public function create(array $data, User $user)
     {
+        $newProductsList = $data['products'];
+        unset($data['products']);
         $meal = new Meal();
-        $meal->setName($data['name']);
-        $meal->setDescription($data['description']);
-        $meal->setPortions($data['portions']);
-        $meal->setCalory($data['calory']);
-        $meal->setProtein($data['protein']);
-        $meal->setCarbon($data['carbon']);
-        $meal->setFat($data['fat']);
-        $meal->setWeight($data['weight']);
+        $form = $this->formFactory->create(MealType::class,$meal);
+        $form->submit($data);
+        if (!$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
+            throw new ValidationException($errors);
+        }
         $meal->setUser($user);
 
-        foreach ($data['products'] as $item) {
+        foreach ($newProductsList as $item) {
             $product = $this->productRepository->getOneById($item['id']);
             $mealProduct = new MealProduct();
             $mealProduct->setProduct($product);
@@ -90,15 +92,6 @@ class MealService
             $mealProduct->setMeal($meal);
             $this->em->persist($mealProduct);
         }
-        $errors = $this->validator->validate($meal);
-        if (count($errors) > 0) {
-            $messages = [];
-            foreach ($errors as $violation) {
-                $messages[$violation->getPropertyPath()] = $violation->getMessage();
-            }
-            throw new ValidationException($messages);
-        }
-
         $this->em->persist($meal);
         $this->em->flush();
 
@@ -107,8 +100,10 @@ class MealService
 
     public function update(array $data,$id,User $user)
     {
+        $newProductsList = $data['products'];
+        unset($data['products']);
         $meal = $this->mealRepository->getOneById($id);
-        $mealProducts = $this->mealProductRepository->getRecordsByMealId($id);
+        $productsList = $this->mealProductRepository->getRecordsByMealId($id);
         if (!$meal) {
             throw new BadRequestException('The product not found');
         }
@@ -117,31 +112,23 @@ class MealService
             throw new AccessDeniedException('The product have not got to you !');
         }
 
-        $meal->setName($data['name']);
-        $meal->setDescription($data['description']);
-        $meal->setPortions($data['portions']);
-        $meal->setCalory($data['calory']);
-        $meal->setProtein($data['protein']);
-        $meal->setCarbon($data['carbon']);
-        $meal->setFat($data['fat']);
-        $meal->setWeight($data['weight']);
-
-        foreach ($data['products'] as $item) {
-            $product = $this->productRepository->getOneById($item['id']);
-            foreach ($mealProducts as $record) {
-                $record->setProduct($product);
-                $record->setAmount($item['amount']);
-                $record->setMeal($meal);
-                $this->em->persist($record);
-            }
+        $form = $this->formFactory->create(MealType::class,$meal);
+        $form->submit($data);
+        if (!$form->isValid()) {
+            $errors = $this->getErrorsFromForm($form);
+            throw new ValidationException($errors);
         }
-        $errors = $this->validator->validate($meal);
-        if (count($errors) > 0) {
-            $messages = [];
-            foreach ($errors as $violation) {
-                $messages[$violation->getPropertyPath()] = $violation->getMessage();
-            }
-            throw new ValidationException($messages);
+
+        foreach ($productsList as $record) {
+            $this->em->remove($record);
+        }
+        foreach ($newProductsList as $item) {
+            $product = $this->productRepository->getOneById($item['id']);
+            $mealProduct = new MealProduct();
+            $mealProduct->setProduct($product);
+            $mealProduct->setAmount($item['amount']);
+            $mealProduct->setMeal($meal);
+            $this->em->persist($mealProduct);
         }
 
         $this->em->flush();
@@ -163,5 +150,21 @@ class MealService
         }
         $this->em->remove($meal);
         $this->em->flush();
+    }
+
+    private function getErrorsFromForm(FormInterface $form)
+    {
+        $errors = array();
+        foreach ($form->getErrors() as $error) {
+            $errors[] = $error->getMessage();
+        }
+        foreach ($form->all() as $childForm) {
+            if ($childForm instanceof FormInterface) {
+                if ($childErrors = $this->getErrorsFromForm($childForm)) {
+                    $errors[$childForm->getName()] = $childErrors;
+                }
+            }
+        }
+        return $errors;
     }
 }

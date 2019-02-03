@@ -41,28 +41,28 @@ class Meal
     private $portions;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
     private $calory;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
     private $protein;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
     private $carbon;
 
     /**
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="float")
      * @Assert\NotBlank(message="This filed can not be blank")
      * @var int
      */
@@ -108,7 +108,7 @@ class Meal
         $this->id = $id;
     }
 
-    public function getName(): string
+    public function getName(): ?string
     {
         return $this->name;
     }
@@ -118,7 +118,7 @@ class Meal
         $this->name = $name;
     }
 
-    public function getDescription(): string
+    public function getDescription(): ?string
     {
         return $this->description;
     }
@@ -128,7 +128,7 @@ class Meal
         $this->description = $description;
     }
 
-    public function getPortions(): int
+    public function getPortions(): ?int
     {
         return $this->portions;
     }
@@ -138,37 +138,37 @@ class Meal
         $this->portions = $portions;
     }
 
-    public function getCalory(): int
+    public function getCalory(): ?float
     {
         return $this->calory;
     }
 
-    public function setCalory(int $calory): void
+    public function setCalory(float $calory): void
     {
         $this->calory = $calory;
     }
 
-    public function getProtein(): int
+    public function getProtein(): ?float
     {
         return $this->protein;
     }
 
-    public function setProtein(int $protein): void
+    public function setProtein(float $protein): void
     {
         $this->protein = $protein;
     }
 
-    public function getCarbon(): int
+    public function getCarbon(): ?float
     {
         return $this->carbon;
     }
 
-    public function setCarbon(int $carbon): void
+    public function setCarbon(float $carbon): void
     {
         $this->carbon = $carbon;
     }
 
-    public function getFat(): int
+    public function getFat(): ?float
     {
         return $this->fat;
     }
@@ -178,7 +178,7 @@ class Meal
         $this->fat = $fat;
     }
 
-    public function getWeight(): float
+    public function getWeight(): ?float
     {
         return $this->weight;
     }
