@@ -9,6 +9,7 @@ use Symfony\Component\EventDispatcher\EventSubscriberInterface;
 use Symfony\Component\HttpKernel\KernelEvents;
 use Symfony\Component\HttpKernel\Event\GetResponseForExceptionEvent;
 use Symfony\Component\HttpKernel\Exception\HttpExceptionInterface;
+use Symfony\Component\HttpFoundation\Response;
 
 class ExceptionSubscriber implements EventSubscriberInterface
 {
@@ -19,9 +20,8 @@ class ExceptionSubscriber implements EventSubscriberInterface
         if ($e instanceof AuthenticationException) {
             $response = $factory->create($e->getMessageKey(),401);
         } else if (!$e instanceof ApiExceptionInterface) {
-            return;
-//            $statusCode = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
-//            $response = $factory->create(Response::$statusTexts[$statusCode],$statusCode);
+            $statusCode = $e instanceof HttpExceptionInterface ? $e->getStatusCode() : 500;
+            $response = $factory->create(Response::$statusTexts[$statusCode],$statusCode);
         } else {
             $response = $factory->create($e->getMessage(),$e->getCode());
         }
